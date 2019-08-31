@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Task_Modal from "./Task_Modal";
+import TaskModal from "./Components/TaskModal";
 const Container = styled.div`
   background-color: #eeeeee;
   width: 100%;
@@ -20,7 +20,7 @@ const Title = styled.div`
   color: #00b5ad;
 `;
 
-const Add_Task = styled.button`
+const AddTask = styled.button`
   width: 70%;
   height: 45px;
   font-family: consolas;
@@ -38,40 +38,26 @@ const Add_Task = styled.button`
 
 const App = () => {
   const [isModalActice, setIsModalActive] = useState(false);
-  const [task, setTask] = useState({
-    taskName: "",
-    description: "",
-    timestamp: new Date().getTime()
-  });
-  const [tasks, setTasks] = useState([]);
+  const [TaskList, setTaskList] = useState([]);
   function handleIsModalActiveChange() {
-    setIsModalActive(prevState => !prevState);
+    setIsModalActive(pre => !pre);
   }
-  function handleTaskFormChange(e) {
-    const { name, value } = e.target;
-    const newTask = { ...task };
-    newTask[name] = value;
-    setTask(prevState => (prevState = newTask));
+  function addTaskToList(task_object) {
+    const newTaskList = [...TaskList];
+    newTaskList.push(task_object);
+    setTaskList(newTaskList);
   }
-  function addTask() {
-    const newTask = { ...task };
-    newTask.timestamp = new Date().getTime();
-    setTask(prevState => (prevState = newTask));
-    const newTasks = [...tasks];
-    newTasks.push(task);
-    setTasks(prevState => (prevState = newTasks));
-  }
+
   return (
     <>
       <Container>
         <Title>TO DO LIST</Title>
-        <Add_Task onClick={handleIsModalActiveChange}>New Task</Add_Task>
+        <AddTask onClick={handleIsModalActiveChange}>New Task</AddTask>
       </Container>
       {isModalActice && (
-        <Task_Modal
-          handleTaskFormChange={handleTaskFormChange}
+        <TaskModal
+          addTaskToList={addTaskToList}
           handleIsModalActiveChange={handleIsModalActiveChange}
-          addTask={addTask}
         />
       )}
     </>

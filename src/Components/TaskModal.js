@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -89,21 +89,35 @@ const Button = styled.button`
   }
 `;
 
-const Task_Modal = props => {
-  const { handleTaskFormChange, handleIsModalActiveChange, addTask } = props;
+const TaskModal = props => {
+  const { handleIsModalActiveChange, addTaskToList } = props;
+  const [task, setTask] = useState({
+    taskName: "",
+    description: "",
+    timestamp: 0
+  });
+
+  function handleTaskChange(e) {
+    const { name, value } = e.target;
+    const newTask = { ...task };
+    newTask.timestamp = new Date().getTime();
+    newTask[name] = value;
+    setTask(newTask);
+  }
+
   return (
     <Container>
       <CardContainer>
         <CardHeader>New Task</CardHeader>
         <CardBody>
           <input
-            onChange={handleTaskFormChange}
+            onChange={handleTaskChange}
             type="text"
             placeholder="Task Name"
             name="taskName"
           />
           <input
-            onChange={handleTaskFormChange}
+            onChange={handleTaskChange}
             type="text"
             placeholder="Description"
             name="description"
@@ -113,7 +127,13 @@ const Task_Modal = props => {
           <Button onClick={handleIsModalActiveChange} className="cancel">
             Cancel
           </Button>
-          <Button onClick={addTask} className="add">
+          <Button
+            onClick={() => {
+              addTaskToList(task);
+              handleIsModalActiveChange();
+            }}
+            className="add"
+          >
             Add
           </Button>
         </CardFooter>
@@ -122,4 +142,4 @@ const Task_Modal = props => {
   );
 };
 
-export default Task_Modal;
+export default TaskModal;
